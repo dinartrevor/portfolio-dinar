@@ -1,0 +1,262 @@
+Buatkan sebuah website portfolio pribadi profesional modern untuk seorang Full Stack & Backend Developer bernama Dinar Abdul Hollik Firdaus berdasarkan data CV yang saya lampirkan. Website ini akan digunakan untuk menarik perhatian HR, recruiter, dan client freelance, sehingga tampilannya harus modern, clean, elegan, interaktif, premium, dan tidak monoton dalam penggunaan warna. Gunakan style desain yang sedang tren tahun sekarang dengan kombinasi dark mode modern, gradient premium, glassmorphism ringan, animasi smooth, dan micro interaction yang profesional.
+
+Gunakan teknologi berikut:
+
+Laravel 9 sebagai backend utama
+React.js sebagai frontend SPA
+Inertia.js atau API + React tanpa full page reload
+Tailwind CSS untuk styling modern
+Framer Motion / AOS untuk animasi halus
+MySQL sebagai database
+Gunakan architecture yang clean dan scalable
+Responsive di desktop, tablet, dan mobile
+Optimasi SEO dasar
+Gunakan reusable components
+Buat coding clean, modular, dan production ready
+
+Buatkan website dengan konsep modern tech portfolio seperti portfolio developer internasional, namun tetap memiliki identitas personal dan profesional.
+
+====================================
+FITUR WEBSITE PORTFOLIO
+HERO SECTION
+Tampilkan nama lengkap:
+"Dinar Abdul Hollik Firdaus"
+Role:
+"Full Stack Developer | Backend Developer"
+Short professional tagline yang menarik
+Tombol CTA:
+Hire Me
+Download CV
+Contact Me
+Tambahkan animasi typing effect pada role
+Tambahkan background modern abstract gradient / animated blob
+Tambahkan social media icon modern:
+Github
+LinkedIn
+Email
+WhatsApp
+ABOUT ME
+Buat section tentang diri saya berdasarkan CV:
+Backend developer dengan pengalaman lebih dari 3 tahun
+Fokus Laravel, REST API, MySQL, React.js, Node.js
+Pengalaman membangun scalable system dan dashboard
+Pengalaman system integration dan optimization
+
+Tambahkan:
+
+Foto profile modern placeholder
+Cards statistik:
+3+ Years Experience
+10+ Projects
+Full Stack Developer
+Backend Specialist
+TECH STACK SECTION
+Buat tech stack interaktif menggunakan icon modern dan hover animation.
+
+Kategori:
+
+Backend
+Laravel
+PHP
+Node.js
+AdonisJS
+Codeigniter
+Frontend
+React.js
+Tailwind CSS
+Bootstrap
+jQuery
+Database
+MySQL
+SQL Server
+Redis
+Tools
+Git
+Github
+VPS
+Docker
+
+Buat design icon stack seperti modern SaaS landing page.
+
+EXPERIENCE SECTION
+Buat timeline experience modern dengan animasi scroll.
+
+Data perusahaan:
+
+Log In Megastore (2023 - Present)
+Role: Full Stack Developer
+PT Shirobyte (2021 - 2022)
+Role: Backend Developer
+PT Authentic Guard (2020 - 2021)
+Role: Backend Developer
+
+Tampilkan:
+
+Job description
+Tech stack yang digunakan
+Highlight pencapaian
+PROJECTS SECTION
+Buat section project dengan card modern premium style.
+
+Project yang wajib ditampilkan:
+
+Recruitment Psychological & IQ Test App
+Goods Delivery Control System
+Marketing Game Platform
+Hypos POS
+KADIN Indonesia
+BNPT TV
+Indonesia Vaccine Center
+KOLEKTIX
+ARTATIX
+
+Untuk setiap project tampilkan:
+
+Thumbnail modern
+Nama project
+Deskripsi singkat
+Tech stack badge
+Button:
+Live Demo
+Detail Project
+Github (jika ada)
+
+Tambahkan:
+
+Hover animation
+Glow effect
+Smooth transition
+Filtering category project
+CERTIFICATION SECTION
+Tampilkan certification dalam bentuk modern cards:
+PRIME Certification
+Android Development Associate
+EDUCATION SECTION
+Tampilkan:
+Universitas Teknologi Bandung
+Teknik Informatika
+GPA
+SMK Prakarya Internasional
+
+Buat timeline education modern.
+
+CONTACT SECTION
+Buat contact form modern:
+Name
+Email
+Message
+
+Tambahkan:
+
+Validasi form
+Toast notification
+Kirim email menggunakan Laravel Mail
+Simpan pesan ke database
+
+Tambahkan juga:
+
+WhatsApp button floating
+Contact info cards
+FOOTER
+Footer modern minimalis:
+Copyright
+Social media
+Quick links
+Back to top button
+====================================
+ADMIN PANEL
+
+Buat halaman admin modern untuk mengelola seluruh isi portfolio.
+
+Gunakan:
+
+Laravel Admin Panel custom
+React Admin Dashboard modern
+Tanpa reload
+Sidebar modern
+Dark mode dashboard
+
+Fitur admin:
+
+Login authentication
+Dashboard analytics sederhana
+CRUD Projects
+CRUD Experience
+CRUD Skills
+CRUD Certificates
+CRUD Education
+CRUD Social Media
+CRUD Contact Messages
+Upload image project
+Upload CV
+Manage hero section
+Manage about section
+
+Tambahkan:
+
+Rich text editor
+Drag and drop upload
+SweetAlert confirmation
+DataTables modern
+Search & filter
+Pagination
+Image preview
+Validation
+====================================
+DESIGN DIRECTION
+
+Gunakan style:
+
+Modern SaaS UI
+Elegant Developer Portfolio
+Interactive UI/UX
+Premium visual hierarchy
+Gradient modern
+Neon subtle glow
+Glassmorphism ringan
+Smooth animation
+Tidak monoton
+Warna modern yang cocok untuk developer portfolio premium
+
+Inspirasi:
+
+Linear App
+Vercel
+Modern developer portfolio
+SaaS landing page modern
+====================================
+ADDITIONAL TECHNICAL REQUIREMENTS
+Gunakan REST API atau Inertia SPA
+Tanpa full page reload
+Gunakan reusable React components
+Clean folder structure
+Gunakan Repository Pattern pada Laravel
+Gunakan Service Layer
+Gunakan API Resource
+Gunakan Form Request Validation
+Gunakan environment configuration
+Optimasi performance
+Lazy loading image
+Responsive animation
+Loading skeleton
+Custom cursor modern (optional)
+Dark/light mode toggle
+Gunakan modern typography
+====================================
+OUTPUT YANG DIHARAPKAN
+
+Tolong generate:
+
+Struktur folder project
+Database schema
+UI design direction
+Halaman frontend lengkap
+Halaman admin lengkap
+Routing structure
+API structure
+React component structure
+Laravel backend architecture
+Desain modern yang siap production
+UI/UX profesional agar HR dan client tertarik saat membuka portfolio saya
+
+Gunakan data pengalaman kerja, project, skill, dan certification dari CV yang saya lampirkan untuk mengisi konten website secara otomatis.

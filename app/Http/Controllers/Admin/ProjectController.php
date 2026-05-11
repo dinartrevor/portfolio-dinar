@@ -1,0 +1,70 @@
+<?php
+
+namespace App\Http\Controllers\Admin;
+
+use App\Http\Controllers\Controller;
+use App\Http\Resources\ProjectResource;
+use App\Models\Project;
+use App\Services\ProjectService;
+use Illuminate\Http\Request;
+use Inertia\Inertia;
+
+class ProjectController extends Controller
+{
+    protected $projectService;
+
+    public function __construct(ProjectService $projectService)
+    {
+        $this->projectService = $projectService;
+    }
+
+    public function index()
+    {
+        return Inertia::render('Admin/Projects/Index', [
+            'projects' => ProjectResource::collection($this->projectService->getAllProjects()),
+        ]);
+    }
+
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'title' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'thumbnail' => 'nullable|image|max:2048',
+            'demo_url' => 'nullable|url',
+            'github_url' => 'nullable|url',
+            'category' => 'nullable|string',
+            'is_featured' => 'boolean',
+            'order' => 'integer',
+        ]);
+
+        $this->projectService->createProject($validated);
+
+        return redirect()->route('admin.projects.index')->with('success', 'Project created successfully.');
+    }
+
+    public function update(Request $request, Project $project)
+    {
+        $validated = $request->validate([
+            'title' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'thumbnail' => 'nullable|image|max:2048',
+            'demo_url' => 'nullable|url',
+            'github_url' => 'nullable|url',
+            'category' => 'nullable|string',
+            'is_featured' => 'boolean',
+            'order' => 'integer',
+        ]);
+
+        $this->projectService->updateProject($project->id, $validated);
+
+        return redirect()->route('admin.projects.index')->with('success', 'Project updated successfully.');
+    }
+
+    public function destroy(Project $project)
+    {
+        $this->projectService->deleteProject($project->id);
+
+        return redirect()->route('admin.projects.index')->with('success', 'Project deleted successfully.');
+    }
+}
