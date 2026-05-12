@@ -18,10 +18,27 @@ class ProjectController extends Controller
         $this->projectService = $projectService;
     }
 
-    public function index()
+    public function index(Request $request)
     {
+        $search = $request->input('search');
+        $projects = $this->projectService->getAllProjects($search);
+
         return Inertia::render('Admin/Projects/Index', [
-            'projects' => ProjectResource::collection($this->projectService->getAllProjects()),
+            'projects' => ProjectResource::collection($projects)->additional([
+                'meta' => [
+                    'pagination' => [
+                        'total' => $projects->total(),
+                        'per_page' => $projects->perPage(),
+                        'current_page' => $projects->currentPage(),
+                        'last_page' => $projects->lastPage(),
+                        'from' => $projects->firstItem(),
+                        'to' => $projects->lastItem(),
+                    ],
+                ],
+            ]),
+            'filters' => [
+                'search' => $search,
+            ],
         ]);
     }
 
@@ -30,6 +47,7 @@ class ProjectController extends Controller
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
+            'tech_stack' => 'nullable|array',
             'thumbnail' => 'nullable|image|max:2048',
             'demo_url' => 'nullable|url',
             'github_url' => 'nullable|url',
@@ -48,6 +66,7 @@ class ProjectController extends Controller
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
+            'tech_stack' => 'nullable|array',
             'thumbnail' => 'nullable|image|max:2048',
             'demo_url' => 'nullable|url',
             'github_url' => 'nullable|url',

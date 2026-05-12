@@ -6,9 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class Project extends Model
 {
-    protected $fillable = ['title', 'description', 'thumbnail', 'demo_url', 'github_url', 'category', 'is_featured', 'order'];
+    protected $fillable = ['title', 'description', 'tech_stack', 'thumbnail', 'demo_url', 'github_url', 'category', 'is_featured', 'order'];
 
     protected $casts = [
         'is_featured' => 'boolean',
+        'tech_stack' => 'array',
     ];
 }

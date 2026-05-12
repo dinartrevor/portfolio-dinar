@@ -6,9 +6,18 @@ use App\Models\Project;
 
 class ProjectRepository
 {
-    public function getAll()
+    public function getAll($search = null)
     {
-        return Project::orderBy('order')->orderBy('created_at', 'desc')->get();
+        $query = Project::query();
+
+        if ($search) {
+            $query->where(function($q) use ($search) {
+                $q->where('title', 'like', "%{$search}%")
+                  ->orWhere('category', 'like', "%{$search}%");
+            });
+        }
+
+        return $query->orderBy('order')->orderBy('created_at', 'desc')->paginate(10);
     }
 
     public function getFeatured()

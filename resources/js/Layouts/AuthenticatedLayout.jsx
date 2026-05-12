@@ -3,16 +3,35 @@ import Dropdown from '@/Components/Dropdown';
 import NavLink from '@/Components/NavLink';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink';
 import { Link, usePage } from '@inertiajs/react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import Toast from '@/Components/Toast';
 
 export default function AuthenticatedLayout({ header, children }) {
     const user = usePage().props.auth.user;
 
     const [showingNavigationDropdown, setShowingNavigationDropdown] =
         useState(false);
+    
+    const { flash } = usePage().props;
+    const [toast, setToast] = useState(null);
+
+    useEffect(() => {
+        if (flash.success) {
+            setToast({ message: flash.success, type: 'success' });
+        } else if (flash.error) {
+            setToast({ message: flash.error, type: 'error' });
+        }
+    }, [flash]);
 
     return (
         <div className="min-h-screen bg-gray-100 dark:bg-gray-900">
+            {toast && (
+                <Toast 
+                    message={toast.message} 
+                    type={toast.type} 
+                    onClose={() => setToast(null)} 
+                />
+            )}
             <nav className="border-b border-gray-100 bg-white dark:border-gray-700 dark:bg-gray-800">
                 <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                     <div className="flex h-16 justify-between">

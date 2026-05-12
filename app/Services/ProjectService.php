@@ -14,9 +14,9 @@ class ProjectService
         $this->projectRepository = $projectRepository;
     }
 
-    public function getAllProjects()
+    public function getAllProjects($search = null)
     {
-        return $this->projectRepository->getAll();
+        return $this->projectRepository->getAll($search);
     }
 
     public function createProject(array $data)

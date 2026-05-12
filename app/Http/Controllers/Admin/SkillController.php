@@ -35,6 +35,7 @@ class SkillController extends Controller
             'level' => 'required|integer|min:0|max:100',
             'category' => 'nullable|string|max:255',
             'icon' => 'nullable|string',
+            'color' => 'nullable|string|max:7',
         ]);
 
         $this->skillService->createSkill($validated);
@@ -57,6 +58,7 @@ class SkillController extends Controller
             'level' => 'required|integer|min:0|max:100',
             'category' => 'nullable|string|max:255',
             'icon' => 'nullable|string',
+            'color' => 'nullable|string|max:7',
         ]);
 
         $this->skillService->updateSkill($id, $validated);

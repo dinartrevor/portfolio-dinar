@@ -8,6 +8,7 @@ export default function Create() {
         level: 80,
         category: 'Backend',
         icon: '',
+        color: '#22d3ee',
     });
 
     const submit = (e) => {
@@ -60,6 +61,39 @@ export default function Create() {
                                     <option value="Soft Skills">Soft Skills</option>
                                 </select>
                                 {errors.category && <div className="text-red-500 text-xs mt-1">{errors.category}</div>}
+                            </div>
+
+                            <div className="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Icon Name</label>
+                                    <input
+                                        type="text"
+                                        value={data.icon}
+                                        onChange={e => setData('icon', e.target.value)}
+                                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-cyan-500 focus:ring-cyan-500 dark:bg-gray-900 dark:border-gray-700 dark:text-gray-300"
+                                        placeholder="e.g. laravel, react"
+                                    />
+                                    {errors.icon && <div className="text-red-500 text-xs mt-1">{errors.icon}</div>}
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Brand Color</label>
+                                    <div className="flex gap-2">
+                                        <input
+                                            type="color"
+                                            value={data.color || '#22d3ee'}
+                                            onChange={e => setData('color', e.target.value)}
+                                            className="mt-1 block w-12 h-10 rounded-md border-gray-300 shadow-sm focus:border-cyan-500 focus:ring-cyan-500 dark:bg-gray-900 dark:border-gray-700"
+                                        />
+                                        <input
+                                            type="text"
+                                            value={data.color}
+                                            onChange={e => setData('color', e.target.value)}
+                                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-cyan-500 focus:ring-cyan-500 dark:bg-gray-900 dark:border-gray-700 dark:text-gray-300"
+                                            placeholder="#ffffff"
+                                        />
+                                    </div>
+                                    {errors.color && <div className="text-red-500 text-xs mt-1">{errors.color}</div>}
+                                </div>
                             </div>
 
                             <div>

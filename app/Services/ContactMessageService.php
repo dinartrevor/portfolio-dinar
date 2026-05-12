@@ -25,7 +25,15 @@ class ContactMessageService
 
     public function createMessage(array $data)
     {
-        return $this->messageRepository->create($data);
+        $message = $this->messageRepository->create($data);
+
+        // Send email notification
+        $contactEmail = \App\Models\Setting::where('key', 'contact_email')->first()?->value;
+        if ($contactEmail) {
+            \Illuminate\Support\Facades\Mail::to($contactEmail)->send(new \App\Mail\ContactMessageReceived($message));
+        }
+
+        return $message;
     }
 
     public function deleteMessage($id)
