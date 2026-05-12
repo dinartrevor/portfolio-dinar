@@ -1,6 +1,6 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, Link } from '@inertiajs/react';
-import { ChevronLeft, ExternalLink, Github, Award, Tag, Calendar } from 'lucide-react';
+import { ChevronLeft, ExternalLink, GithubIcon, Award, Tag, Calendar } from 'lucide-react';
 
 export default function Show({ project }) {
     const getImageUrl = (path) => {
@@ -89,7 +89,7 @@ export default function Show({ project }) {
                                     )}
                                     {project.github_url ? (
                                         <a href={project.github_url} target="_blank" className="flex items-center justify-between p-4 rounded-xl bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-600 transition-all font-bold">
-                                            GitHub Repo <Github className="w-4 h-4" />
+                                            GitHub Repo <GithubIcon className="w-4 h-4" />
                                         </a>
                                     ) : (
                                         <div className="p-4 rounded-xl bg-gray-50 dark:bg-gray-900/50 border border-gray-100 dark:border-gray-800 text-gray-400 text-sm italic">GitHub URL not set</div>
