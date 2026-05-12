@@ -24,7 +24,9 @@ class ProjectController extends Controller
         $projects = $this->projectService->getAllProjects($search);
 
         return Inertia::render('Admin/Projects/Index', [
-            'projects' => ProjectResource::collection($projects)->additional([
+            'projects' => [
+                'data' => ProjectResource::collection($projects),
+                'links' => $projects->linkCollection()->toArray(),
                 'meta' => [
                     'pagination' => [
                         'total' => $projects->total(),
@@ -35,11 +37,16 @@ class ProjectController extends Controller
                         'to' => $projects->lastItem(),
                     ],
                 ],
-            ]),
+            ],
             'filters' => [
                 'search' => $search,
             ],
         ]);
+    }
+
+    public function create()
+    {
+        return Inertia::render('Admin/Projects/Create');
     }
 
     public function store(Request $request)
@@ -59,6 +66,20 @@ class ProjectController extends Controller
         $this->projectService->createProject($validated);
 
         return redirect()->route('admin.projects.index')->with('success', 'Project created successfully.');
+    }
+
+    public function show(Project $project)
+    {
+        return Inertia::render('Admin/Projects/Show', [
+            'project' => new ProjectResource($project),
+        ]);
+    }
+
+    public function edit(Project $project)
+    {
+        return Inertia::render('Admin/Projects/Edit', [
+            'project' => new ProjectResource($project),
+        ]);
     }
 
     public function update(Request $request, Project $project)

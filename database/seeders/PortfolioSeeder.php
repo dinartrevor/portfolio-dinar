@@ -22,19 +22,19 @@ class PortfolioSeeder extends Seeder
         // Settings
         $settings = [
             ['key' => 'site_title', 'value' => 'Dinar Abdul Hollik Firdaus | Full Stack Developer', 'group' => 'site'],
-            ['key' => 'site_logo_text', 'value' => 'DH.', 'group' => 'site'],
+            ['key' => 'site_logo_text', 'value' => 'Dinar Abdul.', 'group' => 'site'],
             ['key' => 'site_logo_image', 'value' => null, 'group' => 'site'],
-            ['key' => 'hero_badge', 'value' => 'Available for Freelance & Full-time', 'group' => 'hero'],
+            ['key' => 'hero_badge', 'value' => 'Available for Freelance', 'group' => 'hero'],
             ['key' => 'hero_title_prefix', 'value' => 'Dinar Abdul Hollik', 'group' => 'hero'],
             ['key' => 'hero_title_suffix', 'value' => 'Firdaus', 'group' => 'hero'],
             ['key' => 'hero_description', 'value' => 'Full Stack Developer | Backend Specialist with 3+ years of experience building scalable systems and interactive web applications.', 'group' => 'hero'],
-            ['key' => 'profile_image', 'value' => json_encode(['img/dinar.jpg', 'img/dinar2.jpg']), 'group' => 'about'],
+            ['key' => 'profile_image', 'value' => json_encode(['img/dinar.jpg', 'img/dinar2.png']), 'group' => 'about'],
             ['key' => 'about_title', 'value' => 'About Me', 'group' => 'about'],
             ['key' => 'about_description', 'value' => "I am a passionate Full Stack & Backend Developer based in Indonesia. I specialize in building high-performance, scalable, and user-centric web applications using modern technologies like Laravel and React.js.\n\nWith over 3 years of professional experience, I have successfully delivered various complex systems, from logistics management to recruitment testing platforms. I am constantly learning and adapting to new technologies to provide the best solutions for my clients and employers.", 'group' => 'about'],
-            ['key' => 'contact_email', 'value' => 'dinar.abd@example.com', 'group' => 'contact'],
+            ['key' => 'contact_email', 'value' => 'dinartrevor@gmail.com', 'group' => 'contact'],
             ['key' => 'contact_description', 'value' => "Have a project in mind or want to hire me for your team? Feel free to reach out. I'm always open to new opportunities.", 'group' => 'contact'],
-            ['key' => 'cv_download_link', 'value' => 'https://drive.google.com/example', 'group' => 'contact'],
-            ['key' => 'whatsapp_number', 'value' => '628123456789', 'group' => 'contact'],
+            ['key' => 'cv_download_link', 'value' => 'https://drive.google.com/file/d/1ddeQiJg0eV_Ek4hvoinDjnwpBRZV9ld1/view?usp=sharing', 'group' => 'contact'],
+            ['key' => 'whatsapp_number', 'value' => '6285161030200', 'group' => 'contact'],
             ['key' => 'footer_text', 'value' => 'Dinar Abdul Hollik Firdaus. All rights reserved.', 'group' => 'site'],
         ];
 
@@ -65,7 +65,7 @@ class PortfolioSeeder extends Seeder
             'role' => 'Full Stack Developer',
             'start_date' => '2023-01-01',
             'is_current' => true,
-            'tech_stack' => ['Laravel', 'React.js', 'Mantine UI', 'AdonisJS', 'MySQL', 'Node.js'],
+            'tech_stack' => ['Laravel', 'React.js', 'Mantine UI', 'AdonisJS', 'MySQL', 'Node.js', 'Flutter', 'Redis'],
             'description' => "Developed and optimized web applications for performance, scalability, and security using RESTful APIs and AJAX.\nBuilt and maintained backend services using Laravel and AdonisJS.\nDeveloped modern web applications using React.js with Mantine UI to create responsive and user-friendly interfaces.\nDesigned and implemented admin dashboards using React.js (Mantine) integrated with Laravel backend.\nBuilt server-side applications to support real-time communication between client and server.\nMaintained and monitored backend services and databases to ensure high availability and performance.",
         ]);
 
@@ -75,7 +75,7 @@ class PortfolioSeeder extends Seeder
             'start_date' => '2021-06-01',
             'end_date' => '2022-12-31',
             'is_current' => false,
-            'tech_stack' => ['Laravel', 'PHP', 'REST API', 'MySQL', 'Git'],
+            'tech_stack' => ['Laravel', 'PHP', 'REST API', 'MySQL', 'Git', 'CodeIgniter', 'Node JS', 'Vue JS', 'TypeScript'],
             'description' => "Developed RESTful APIs to support system integration across multiple platforms.\nIdentified, debugged, and resolved application issues in a timely manner.\nEnhanced application scalability by optimizing existing features and codebase.\nImplemented version control best practices to improve code quality and reduce bugs.\nCollaborated with front-end teams to ensure smooth backend integration.",
         ]);
 
@@ -85,13 +85,13 @@ class PortfolioSeeder extends Seeder
             'start_date' => '2020-07-01',
             'end_date' => '2021-11-30',
             'is_current' => false,
-            'tech_stack' => ['Laravel', 'PHP', 'MySQL', 'REST API'],
+            'tech_stack' => ['Laravel', 'PHP', 'MySQL', 'REST API', 'Redis', 'Javascrpt'],
             'description' => "Developed RESTful APIs to enable seamless interoperability between multiple systems.\nCollaborated closely with front-end developers to ensure smooth system integration.\nMaintained and monitored backend services and databases to ensure optimal performance and reliability.",
         ]);
 
         // Education
         Education::create([
-            'institution' => 'University of Technology',
+            'institution' => 'Universitas Teknologi Bandung',
             'degree' => 'Bachelor of Informatics Engineering',
             'major' => 'Informatics Engineering',
             'start_year' => '2021',
@@ -109,12 +109,25 @@ class PortfolioSeeder extends Seeder
         ]);
 
         // Certificates
-        Certificate::create([
-            'title' => 'Laravel Advanced',
-            'issuer' => 'Udemy',
-            'issue_date' => '2022-05-15',
-            'credential_url' => 'https://udemy.com/certificate/example',
-        ]);
+        Certificate::create(
+            [
+            'title' => 'Android Development Associate (ADA)',
+            'issuer' => 'CertNexus',
+            'issue_date' => '2025-09-11',
+            'credential_url' => 'https://certifications.certnexus.com/3b4fbdb2-9293-40d0-b8be-6d227f2b0a92#acc.PmGaywr8',
+            ]
+            
+        );
+
+        Certificate::create(
+           [
+            'title' => 'Project Integration Methodology of Excellence (PRIME)',
+            'issuer' => 'CertNexus',
+            'issue_date' => '2025-09-11',
+            'credential_url' => 'https://certifications.certnexus.com/9259cf3d-a539-4735-b9c8-3bef032ee4f9#acc.eE7ZGKdc',
+            ]
+            
+        );
 
         // Projects
         Project::create([

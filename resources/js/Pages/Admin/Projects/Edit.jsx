@@ -6,18 +6,20 @@ import { useState } from 'react';
 export default function Edit({ project }) {
     const { data, setData, post, processing, errors } = useForm({
         _method: 'PUT',
-        title: project.title || '',
-        description: project.description || '',
-        tech_stack: project.tech_stack || [],
+        title: project.data.title || '',
+        description: project.data.description || '',
+        tech_stack: project.data.tech_stack || [],
         thumbnail: null,
-        demo_url: project.demo_url || '',
-        github_url: project.github_url || '',
-        category: project.category || '',
-        is_featured: project.is_featured || false,
-        order: project.order || 0,
+        demo_url: project.data.demo_url || '',
+        github_url: project.data.github_url || '',
+        category: project.data.category || '',
+        is_featured: project.data.is_featured || false,
+        order: project.data.order || 0,
     });
 
-    const [techInput, setTechInput] = useState(project.tech_stack?.join(', ') || '');
+    console.log(project.data)
+
+    const [techInput, setTechInput] = useState(project.data.tech_stack?.join(', ') || '');
     const [preview, setPreview] = useState(null);
 
     const handleTechInput = (e) => {
@@ -30,7 +32,7 @@ export default function Edit({ project }) {
     const submit = (e) => {
         e.preventDefault();
         // Since we are uploading a file (potentially), we use POST with _method PUT
-        post(route('admin.projects.update', project.id));
+        post(route('admin.projects.update', project.data.id));
     };
 
     return (
@@ -41,12 +43,12 @@ export default function Edit({ project }) {
                         <ChevronLeft className="w-6 h-6" />
                     </Link>
                     <h2 className="text-xl font-semibold leading-tight text-gray-800 dark:text-gray-200">
-                        Edit Project: {project.title}
+                        Edit Project: {project.data.title}
                     </h2>
                 </div>
             }
         >
-            <Head title={`Edit ${project.title}`} />
+            <Head title={`Edit ${project.data.title}`} />
 
             <div className="py-12">
                 <div className="mx-auto max-w-3xl sm:px-6 lg:px-8">

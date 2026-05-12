@@ -6,8 +6,7 @@ import { useState, useEffect } from 'react';
 export default function Index({ projects, filters }) {
     const { delete: destroy } = useForm();
     const [search, setSearch] = useState(filters.search || '');
-
-    const handleDelete = (id) => {
+;    const handleDelete = (id) => {
         if (confirm('Are you sure you want to delete this project?')) {
             destroy(route('admin.projects.destroy', id));
         }
@@ -68,7 +67,7 @@ export default function Index({ projects, filters }) {
                                         </tr>
                                     </thead>
                                     <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
-                                        {projects.data.map((project) => (
+                                        {projects.data.data.map((project) => (
                                             <tr key={project.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors group">
                                                 <td className="px-6 py-4">
                                                     <div className="w-20 h-14 rounded-lg bg-gray-200 dark:bg-gray-700 overflow-hidden border border-gray-100 dark:border-gray-600 shadow-sm">
