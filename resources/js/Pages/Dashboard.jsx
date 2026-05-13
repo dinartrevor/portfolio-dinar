@@ -10,13 +10,15 @@ import {
     ArrowRight,
     TrendingUp,
     Users,
-    Eye
+    Eye,
+    Heart,
+    Rocket
 } from 'lucide-react';
 
 export default function Dashboard({ stats }) {
     const cards = [
         { 
-            title: 'Total Projects', 
+            title: 'Full Stack Projects', 
             value: stats?.projects || 0, 
             icon: <Layers className="w-6 h-6 text-blue-500" />, 
             link: route('admin.projects.index'),
@@ -28,6 +30,13 @@ export default function Dashboard({ stats }) {
             icon: <Briefcase className="w-6 h-6 text-purple-500" />, 
             link: route('admin.experiences.index'),
             color: 'purple'
+        },
+        { 
+            title: 'Freelance Work', 
+            value: stats?.freelance_experiences || 0, 
+            icon: <Rocket className="w-6 h-6 text-orange-500" />, 
+            link: route('admin.freelance-experiences.index'),
+            color: 'orange'
         },
         { 
             title: 'Skills Set', 
@@ -42,6 +51,13 @@ export default function Dashboard({ stats }) {
             icon: <Award className="w-6 h-6 text-green-500" />, 
             link: route('admin.certificates.index'),
             color: 'green'
+        },
+        { 
+            title: 'Interests', 
+            value: stats?.hobbies || 0, 
+            icon: <Heart className="w-6 h-6 text-red-500" />, 
+            link: route('admin.hobbies.index'),
+            color: 'red'
         },
     ];
 
@@ -91,7 +107,7 @@ export default function Dashboard({ stats }) {
                     </div>
 
                     {/* Stats Grid */}
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                         {cards.map((card, i) => (
                             <Link 
                                 key={i}

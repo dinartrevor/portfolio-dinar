@@ -21,16 +21,20 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(
             'stats' => [
                 'projects' => \App\Models\Project::count(),
                 'experiences' => \App\Models\Experience::count(),
+                'freelance_experiences' => \App\Models\FreelanceExperience::count(),
                 'skills' => \App\Models\Skill::count(),
                 'certificates' => \App\Models\Certificate::count(),
+                'hobbies' => \App\Models\Hobby::count(),
             ]
         ]);
     })->name('dashboard');
 
     Route::resource('projects', \App\Http\Controllers\Admin\ProjectController::class);
     Route::resource('experiences', \App\Http\Controllers\Admin\ExperienceController::class);
+    Route::resource('freelance-experiences', \App\Http\Controllers\Admin\FreelanceExperienceController::class);
     Route::resource('skills', \App\Http\Controllers\Admin\SkillController::class);
     Route::resource('certificates', \App\Http\Controllers\Admin\CertificateController::class);
+    Route::resource('hobbies', \App\Http\Controllers\Admin\HobbyController::class);
     Route::resource('educations', \App\Http\Controllers\Admin\EducationController::class);
     Route::resource('social-links', \App\Http\Controllers\Admin\SocialLinkController::class);
     Route::resource('settings', \App\Http\Controllers\Admin\SettingController::class);

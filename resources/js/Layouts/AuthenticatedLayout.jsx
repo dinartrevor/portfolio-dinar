@@ -15,6 +15,8 @@ import {
     Share2, 
     Settings as SettingsIcon, 
     Mail, 
+    Heart,
+    Rocket,
     ChevronDown,
     Menu,
     X as CloseIcon
@@ -41,8 +43,10 @@ export default function AuthenticatedLayout({ header, children }) {
         { name: 'Dashboard', href: route('admin.dashboard'), active: route().current('admin.dashboard'), icon: <LayoutDashboard className="w-4 h-4" /> },
         { name: 'Projects', href: route('admin.projects.index'), active: route().current('admin.projects.*'), icon: <Layers className="w-4 h-4" /> },
         { name: 'Experience', href: route('admin.experiences.index'), active: route().current('admin.experiences.*'), icon: <Briefcase className="w-4 h-4" /> },
+        { name: 'Freelance', href: route('admin.freelance-experiences.index'), active: route().current('admin.freelance-experiences.*'), icon: <Rocket className="w-4 h-4" /> },
         { name: 'Skills', href: route('admin.skills.index'), active: route().current('admin.skills.*'), icon: <Zap className="w-4 h-4" /> },
         { name: 'Certificates', href: route('admin.certificates.index'), active: route().current('admin.certificates.*'), icon: <Award className="w-4 h-4" /> },
+        { name: 'Hobbies', href: route('admin.hobbies.index'), active: route().current('admin.hobbies.*'), icon: <Heart className="w-4 h-4" /> },
         { name: 'Education', href: route('admin.educations.index'), active: route().current('admin.educations.*'), icon: <GraduationCap className="w-4 h-4" /> },
         { name: 'Social', href: route('admin.social-links.index'), active: route().current('admin.social-links.*'), icon: <Share2 className="w-4 h-4" /> },
         { name: 'Settings', href: route('admin.settings.index'), active: route().current('admin.settings.*'), icon: <SettingsIcon className="w-4 h-4" /> },
@@ -176,6 +180,12 @@ export default function AuthenticatedLayout({ header, children }) {
                             Experience
                         </ResponsiveNavLink>
                         <ResponsiveNavLink
+                            href={route('admin.freelance-experiences.index')}
+                            active={route().current('admin.freelance-experiences.*')}
+                        >
+                            Freelance
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink
                             href={route('admin.skills.index')}
                             active={route().current('admin.skills.*')}
                         >
@@ -186,6 +196,12 @@ export default function AuthenticatedLayout({ header, children }) {
                             active={route().current('admin.certificates.*')}
                         >
                             Certificates
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink
+                            href={route('admin.hobbies.index')}
+                            active={route().current('admin.hobbies.*')}
+                        >
+                            Hobbies
                         </ResponsiveNavLink>
                         <ResponsiveNavLink
                             href={route('admin.educations.index')}
