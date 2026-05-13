@@ -2,11 +2,18 @@
 
 use App\Http\Controllers\Web\HomeController;
 use Illuminate\Foundation\Application;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::post('/contact', [\App\Http\Controllers\Web\ContactController::class, 'store'])->name('contact.store');
+
+Route::get('/seeder', function () {
+    Artisan::call('db:seed');
+
+    return "Seeder berhasil dijalankan!";
+});
 
 Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', function () {
