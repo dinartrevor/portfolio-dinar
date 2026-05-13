@@ -21,7 +21,7 @@ export default function Create() {
                     <Link href={route('admin.social-links.index')} className="text-gray-500 hover:text-gray-700">
                         <ChevronLeft className="w-6 h-6" />
                     </Link>
-                    <h2 className="text-xl font-semibold leading-tight text-gray-800 dark:text-gray-200">
+                    <h2 className="text-xl font-semibold leading-tight text-gray-800">
                         Add Social Link
                     </h2>
                 </div>

@@ -14,7 +14,7 @@ export default function Index({ messages }) {
     return (
         <AuthenticatedLayout
             header={
-                <h2 className="text-xl font-semibold leading-tight text-gray-800 dark:text-gray-200">
+                <h2 className="text-xl font-semibold leading-tight text-gray-800">
                     Inquiry Messages
                 </h2>
             }

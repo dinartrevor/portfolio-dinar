@@ -19,7 +19,7 @@ export default function Show({ message }) {
                         <Link href={route('admin.messages.index')} className="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300">
                             <ChevronLeft className="w-6 h-6" />
                         </Link>
-                        <h2 className="text-xl font-semibold leading-tight text-gray-800 dark:text-gray-200">
+                        <h2 className="text-xl font-semibold leading-tight text-gray-800">
                             View Message
                         </h2>
                     </div>

@@ -24,7 +24,7 @@ export default function Create() {
                     <Link href={route('admin.experiences.index')} className="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300">
                         <ChevronLeft className="w-6 h-6" />
                     </Link>
-                    <h2 className="text-xl font-semibold leading-tight text-gray-800 dark:text-gray-200">
+                    <h2 className="text-xl font-semibold leading-tight text-gray-800">
                         Add Work Experience
                     </h2>
                 </div>

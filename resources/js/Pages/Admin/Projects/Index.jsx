@@ -36,7 +36,7 @@ export default function Index({ projects, filters }) {
         <AuthenticatedLayout
             header={
                 <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-                    <h2 className="text-xl font-semibold leading-tight text-gray-800 dark:text-gray-200">
+                    <h2 className="text-xl font-semibold leading-tight text-gray-800">
                         Manage Projects
                     </h2>
                     <div className="flex items-center gap-4 w-full md:w-auto">

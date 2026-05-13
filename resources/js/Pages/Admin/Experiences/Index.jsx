@@ -15,7 +15,7 @@ export default function Index({ experiences }) {
         <AuthenticatedLayout
             header={
                 <div className="flex justify-between items-center">
-                    <h2 className="text-xl font-semibold leading-tight text-gray-800 dark:text-gray-200">
+                    <h2 className="text-xl font-semibold leading-tight text-gray-800">
                         Manage Experience
                     </h2>
                     <Link

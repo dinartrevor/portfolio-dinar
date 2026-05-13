@@ -15,7 +15,7 @@ export default function Index({ educations }) {
         <AuthenticatedLayout
             header={
                 <div className="flex justify-between items-center">
-                    <h2 className="text-xl font-semibold leading-tight text-gray-800 dark:text-gray-200">
+                    <h2 className="text-xl font-semibold leading-tight text-gray-800">
                         Manage Education
                     </h2>
                     <Link

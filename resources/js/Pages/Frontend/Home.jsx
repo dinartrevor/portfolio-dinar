@@ -141,9 +141,13 @@ const Home = ({ settings, skills, experiences, freelance_experiences, projects, 
         );
     };
 
+    const favicon = settings?.site_logo_icon ? getImageUrl(settings.site_logo_icon) : null;
+
     return (
         <div className="min-h-screen bg-[#0a0a0a] text-white selection:bg-cyan-500 selection:text-white">
-            <Head title={settings?.site_title || "Dinar Abdul Hollik Firdaus | Full Stack Developer"} />
+            <Head title={settings?.site_title || "Dinar Abdul Hollik Firdaus | Full Stack Developer"}>
+                {favicon && <link rel="icon" type="image/x-icon" href={favicon} />}
+            </Head>
             
             {/* Navbar */}
             <nav className={`fixed top-0 w-full z-50 transition-all duration-300 ${isScrolled ? 'bg-black/80 backdrop-blur-lg border-b border-white/10 py-3' : 'bg-transparent py-6'}`}>
@@ -163,9 +167,9 @@ const Home = ({ settings, skills, experiences, freelance_experiences, projects, 
                         <a href="#about" className="hover:text-cyan-400 transition-all hover:translate-y-[-2px]">About</a>
                         <a href="#skills" className="hover:text-cyan-400 transition-all hover:translate-y-[-2px]">Skills</a>
                         <a href="#experience" className="hover:text-cyan-400 transition-all hover:translate-y-[-2px]">Experience</a>
-                        <a href="#freelance" className="hover:text-cyan-400 transition-all hover:translate-y-[-2px]">Freelance</a>
                         <a href="#projects" className="hover:text-cyan-400 transition-all hover:translate-y-[-2px]">Projects</a>
-                        <a href="#certificates" className="hover:text-cyan-400 transition-all hover:translate-y-[-2px]">Certifications</a>
+                        <a href="#freelance" className="hover:text-cyan-400 transition-all hover:translate-y-[-2px]">Freelance</a>
+                        <a href="#education" className="hover:text-cyan-400 transition-all hover:translate-y-[-2px]">Education</a>
                         <a href="#contact" className="hover:text-cyan-400 transition-all hover:translate-y-[-2px]">Contact</a>
                     </div>
 

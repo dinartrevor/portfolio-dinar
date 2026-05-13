@@ -47,7 +47,7 @@ export default function Index({ settings }) {
     return (
         <AuthenticatedLayout
             header={
-                <h2 className="text-xl font-semibold leading-tight text-gray-800 dark:text-gray-200">
+                <h2 className="text-xl font-semibold leading-tight text-gray-800">
                     System Settings
                 </h2>
             }
@@ -63,7 +63,7 @@ export default function Index({ settings }) {
                                     <div className="p-3 rounded-2xl bg-white dark:bg-gray-800 shadow-sm border border-gray-100 dark:border-gray-700">
                                         {groupIcons[group] || groupIcons.general}
                                     </div>
-                                    <h3 className="text-xl font-black capitalize tracking-tight">{group} Configuration</h3>
+                                    <h3 className="text-xl font-black capitalize tracking-tight text-cyan-600">{group} Configuration</h3>
                                 </div>
                                 <div className="text-[10px] font-black uppercase tracking-widest text-gray-400 hidden sm:block">
                                     {items.length} Entries

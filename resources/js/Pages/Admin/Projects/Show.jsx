@@ -22,7 +22,7 @@ export default function Show({ project }) {
                     <Link href={route('admin.projects.index')} className="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300">
                         <ChevronLeft className="w-6 h-6" />
                     </Link>
-                    <h2 className="text-xl font-semibold leading-tight text-gray-800 dark:text-gray-200">
+                    <h2 className="text-xl font-semibold leading-tight text-gray-800">
                         Project Details: {project.title}
                     </h2>
                 </div>
