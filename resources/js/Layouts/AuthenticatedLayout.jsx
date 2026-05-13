@@ -100,7 +100,7 @@ export default function AuthenticatedLayout({ header, children }) {
                         <div className="mb-10">
                             <div className="flex items-center gap-3 mb-2">
                                 <div className="h-1 w-8 bg-cyan-600 rounded-full"></div>
-                                <span className="text-[10px] font-black uppercase tracking-[0.3em] text-gray-400">Management Console</span>
+                                <span className="text-[10px] font-black uppercase tracking-[0.3em] text-gray-400">Management Data</span>
                             </div>
                             <h1 className="text-3xl font-black text-gray-900 tracking-tight">{header}</h1>
                         </div>
