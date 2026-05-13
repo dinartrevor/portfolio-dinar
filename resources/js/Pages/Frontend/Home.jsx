@@ -30,6 +30,17 @@ const Home = ({ settings, skills, experiences, projects, certificates, education
     const [selectedCategory, setSelectedCategory] = useState('All');
     const [selectedProject, setSelectedProject] = useState(null);
 
+    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+    const [isScrolled, setIsScrolled] = useState(false);
+
+    React.useEffect(() => {
+        const handleScroll = () => {
+            setIsScrolled(window.scrollY > 50);
+        };
+        window.addEventListener('scroll', handleScroll);
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, []);
+
     const { data: contactData, setData: setContactData, post, processing: contactProcessing, reset: resetContact, errors: contactErrors, recentlySuccessful: contactSuccess } = useForm({
         name: '',
         email: '',
@@ -40,18 +51,46 @@ const Home = ({ settings, skills, experiences, projects, certificates, education
     const getImageUrl = (path) => {
         if (!path) return "/placeholder-profile.jpg";
         if (path.startsWith('http')) return path;
-        return `/storage/${path}`;
+        
+        // Clean path to prevent double storage/storage or leading slashes
+        // 1. Remove leading slashes
+        let cleanPath = path.replace(/^\/+/, '');
+        // 2. Remove redundant storage/ prefix if it exists
+        if (cleanPath.startsWith('storage/')) {
+            cleanPath = cleanPath.substring(8);
+        }
+        
+        return `/storage/${cleanPath}`;
     };
 
     const parseProfileImages = (value) => {
         try {
             if (!value) return ["/placeholder-profile.jpg"];
             const parsed = JSON.parse(value);
-            return Array.isArray(parsed) ? parsed : [value];
+            return Array.isArray(parsed) ? parsed.map(p => getImageUrl(p)) : [getImageUrl(value)];
         } catch (e) {
-            return [value];
+            return [getImageUrl(value)];
         }
     };
+
+    // Robust Data Handling Helpers
+    const safeArray = (data) => Array.isArray(data) ? data : [];
+    
+    const getSkillsByCategory = (cat) => {
+        if (!skills) return [];
+        // If skills is already grouped by category (Object from Laravel groupBy)
+        if (!Array.isArray(skills)) {
+            return safeArray(skills[cat]);
+        }
+        // If skills is a flat array
+        return skills.filter(s => s.category === cat);
+    };
+
+    const safeProjects = safeArray(projects);
+    const safeExperiences = safeArray(experiences);
+    const safeCertificates = safeArray(certificates);
+    const safeEducations = safeArray(educations);
+    const safeSocialLinks = safeArray(social_links);
 
     const profileImages = parseProfileImages(settings?.profile_image);
 
@@ -107,36 +146,80 @@ const Home = ({ settings, skills, experiences, projects, certificates, education
             <Head title={settings?.site_title || "Dinar Abdul Hollik Firdaus | Full Stack Developer"} />
             
             {/* Navbar */}
-            <nav className="fixed top-0 w-full z-50 border-b border-white/10 bg-black/50 backdrop-blur-md">
-                <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
+            <nav className={`fixed top-0 w-full z-50 transition-all duration-300 ${isScrolled ? 'bg-black/80 backdrop-blur-lg border-b border-white/10 py-3' : 'bg-transparent py-6'}`}>
+                <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
                     <div className="flex items-center gap-2">
                         {settings?.site_logo_image ? (
-                            <img src={getImageUrl(settings.site_logo_image)} alt="Logo" className="h-8 w-auto" />
+                            <img src={getImageUrl(settings.site_logo_image)} alt="Logo" className="h-8 md:h-10 w-auto" />
                         ) : (
-                            <span className="text-xl font-bold bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">
+                            <span className="text-xl md:text-2xl font-black bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent tracking-tighter">
                                 {settings?.site_logo_text || "DH."}
                             </span>
                         )}
                     </div>
-                    <div className="hidden md:flex gap-8 text-sm font-medium text-gray-400">
+                    
+                    {/* Desktop Menu */}
+                    <div className="hidden lg:flex items-center gap-10 text-sm font-bold uppercase tracking-widest text-gray-400">
                         <a href="#about" className="hover:text-cyan-400 transition-colors">About</a>
                         <a href="#skills" className="hover:text-cyan-400 transition-colors">Skills</a>
                         <a href="#experience" className="hover:text-cyan-400 transition-colors">Experience</a>
                         <a href="#projects" className="hover:text-cyan-400 transition-colors">Projects</a>
                         <a href="#contact" className="hover:text-cyan-400 transition-colors">Contact</a>
                     </div>
-                    <a 
-                        href="#contact"
-                        className="bg-white text-black px-5 py-2 rounded-full text-sm font-semibold hover:bg-cyan-400 transition-all shadow-[0_0_20px_rgba(255,255,255,0.1)] hover:shadow-cyan-500/20"
-                    >
-                        Hire Me
-                    </a>
+
+                    <div className="flex items-center gap-4">
+                        <a 
+                            href="#contact"
+                            className="hidden sm:block bg-white text-black px-6 py-2.5 rounded-full text-xs font-black uppercase tracking-widest hover:bg-cyan-400 transition-all hover:scale-105 active:scale-95 shadow-xl shadow-white/5"
+                        >
+                            Hire Me
+                        </a>
+                        
+                        {/* Mobile Toggle */}
+                        <button 
+                            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                            className="lg:hidden p-2 text-gray-400 hover:text-white transition-colors"
+                        >
+                            {isMobileMenuOpen ? <X size={28} /> : (
+                                <div className="space-y-1.5">
+                                    <div className="w-8 h-0.5 bg-current rounded-full" />
+                                    <div className="w-6 h-0.5 bg-current rounded-full ml-auto" />
+                                    <div className="w-8 h-0.5 bg-current rounded-full" />
+                                </div>
+                            )}
+                        </button>
+                    </div>
                 </div>
+
+                {/* Mobile Menu */}
+                <AnimatePresence>
+                    {isMobileMenuOpen && (
+                        <motion.div
+                            initial={{ opacity: 0, height: 0 }}
+                            animate={{ opacity: 1, height: 'auto' }}
+                            exit={{ opacity: 0, height: 0 }}
+                            className="lg:hidden bg-[#0a0a0a] border-b border-white/10 overflow-hidden"
+                        >
+                            <div className="px-6 py-10 flex flex-col gap-6">
+                                {['about', 'skills', 'experience', 'projects', 'contact'].map((item) => (
+                                    <a 
+                                        key={item}
+                                        href={`#${item}`}
+                                        onClick={() => setIsMobileMenuOpen(false)}
+                                        className="text-2xl font-black uppercase tracking-[0.2em] text-gray-500 hover:text-cyan-400 transition-colors"
+                                    >
+                                        {item}
+                                    </a>
+                                ))}
+                            </div>
+                        </motion.div>
+                    )}
+                </AnimatePresence>
             </nav>
 
             {/* Hero Section */}
-            <section className="relative pt-32 pb-20 px-4 overflow-hidden">
-                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[600px] bg-cyan-500/10 blur-[120px] rounded-full -z-10" />
+            <section className="relative pt-28 md:pt-32 pb-16 md:pb-20 px-4 overflow-hidden">
+                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full md:w-[1000px] h-[400px] md:h-[600px] bg-cyan-500/10 blur-[80px] md:blur-[120px] rounded-full -z-10" />
                 
                 <div className="max-w-7xl mx-auto text-center">
                     <motion.div
@@ -147,23 +230,23 @@ const Home = ({ settings, skills, experiences, projects, certificates, education
                         <span className="px-4 py-2 rounded-full bg-white/5 border border-white/10 text-cyan-400 text-sm font-medium inline-block mb-6 backdrop-blur-sm">
                             {settings?.hero_badge || "Available for Freelance & Full-time"}
                         </span>
-                        <h1 className="text-5xl md:text-7xl font-extrabold mb-6 tracking-tight leading-[1.1]">
-                            {settings?.hero_title_prefix || "Dinar Abdul Hollik"} <br />
+                        <h1 className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black mb-8 tracking-tighter leading-tight md:leading-[1.1]">
+                            {settings?.hero_title_prefix || "Dinar Abdul Hollik"} <br className="hidden sm:block" />
                             <span className="bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 bg-clip-text text-transparent">
                                 {settings?.hero_title_suffix || "Firdaus"}
                             </span>
                         </h1>
-                        <p className="text-lg md:text-xl text-gray-400 max-w-2xl mx-auto mb-10 leading-relaxed">
+                        <p className="text-base sm:text-lg md:text-xl text-gray-400 max-w-2xl mx-auto mb-12 leading-relaxed px-4 md:px-0">
                             {settings?.hero_description || "Full Stack Developer | Backend Specialist with 3+ years of experience building scalable systems and interactive web applications."}
                         </p>
                         
-                        <div className="flex flex-wrap justify-center gap-4">
+                        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 px-6 md:px-0">
                             <a 
                                 href="#contact"
-                                className="px-8 py-4 rounded-2xl bg-cyan-500 text-black font-bold flex items-center gap-2 hover:bg-cyan-400 shadow-[0_0_20px_rgba(34,211,238,0.3)] transition-all active:scale-95"
+                                className="w-full sm:w-auto px-10 py-5 rounded-2xl bg-cyan-500 text-black font-black uppercase tracking-widest flex items-center justify-center gap-3 hover:bg-cyan-400 shadow-[0_0_30px_rgba(34,211,238,0.4)] transition-all active:scale-95"
                             >
-                                <MessageSquare size={20} />
-                                Contact Me
+                                <MessageSquare size={22} />
+                                Get In Touch
                             </a>
                             {settings?.cv_download_link && (
                                 <a 
@@ -191,108 +274,204 @@ const Home = ({ settings, skills, experiences, projects, certificates, education
             </section>
 
             {/* About Section */}
-            <section id="about" className="py-20 px-4 bg-white/[0.01] relative overflow-hidden">
-                <div className="absolute bottom-0 right-0 w-[400px] h-[400px] bg-blue-500/5 blur-[100px] rounded-full -z-10" />
+           <section id="about" className="py-16 md:py-32 px-6 bg-white/[0.01] relative overflow-hidden">
+    <div className="absolute bottom-0 right-0 w-[250px] md:w-[400px] h-[250px] md:h-[400px] bg-blue-500/5 blur-[80px] md:blur-[100px] rounded-full -z-10 pointer-events-none" />
+
+    <div className="max-w-7xl mx-auto">
+        <div className="grid lg:grid-cols-2 gap-16 md:gap-24 items-center">
+            
+            <motion.div
+                initial={{ opacity: 0, scale: 0.95 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true, margin: "50px" }}
+                className="relative group order-2 lg:order-1 w-full"
+            >
+
+                <div className="absolute -inset-4 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-[2.5rem] blur-2xl opacity-10 group-hover:opacity-20 transition-opacity pointer-events-none" />
+
+                <div className="relative w-full h-[450px] sm:h-[550px] lg:h-full lg:aspect-[4/5] rounded-[2rem] md:rounded-[2.5rem] overflow-hidden border border-white/10 bg-gray-900 shadow-2xl isolate">
+                    
+                
+                    <div className="block lg:hidden w-full h-full relative">
+                        {profileImages && profileImages.length > 0 ? (
+                            <img 
+                                src={getImageUrl(profileImages[0])} 
+                                alt="Dinar Abdul" 
+                                className="w-full h-full object-cover"
+                            />
+                        ) : (
+                            <div className="w-full h-full bg-gray-800 animate-pulse" />
+                        )}
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none" />
+                    </div>
+
+                    <div className="hidden lg:block w-full h-full">
+                        <Swiper
+                            modules={[Autoplay, Pagination, EffectFade]}
+                            effect="fade"
+                            fadeEffect={{ crossFade: true }}
+                            autoplay={{ delay: 4000, disableOnInteraction: false }}
+                            pagination={{ clickable: true, dynamicBullets: true }}
+                            grabCursor={true}
+                            speed={1000}
+                            loop={profileImages.length > 1}
+                            className="w-full h-full"
+                        >
+                            {profileImages.map((img, i) => (
+                                <SwiperSlide key={i} className="w-full h-full">
+                                    <img 
+                                        src={getImageUrl(img)} 
+                                        alt={`Profile ${i + 1}`} 
+                                        className="w-full h-full object-cover" 
+                                    />
+                                    <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent pointer-events-none" />
+                                </SwiperSlide>
+                            ))}
+                        </Swiper>
+                    </div>
+                </div>
+            </motion.div>
+
+            <motion.div
+                initial={{ opacity: 0, x: 20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true, margin: "50px" }}
+                className="order-1 lg:order-2"
+            >
+                <h2 className="text-3xl sm:text-4xl md:text-5xl font-black mb-8 flex items-center gap-6">
+                    <span className="h-px w-12 bg-cyan-500 hidden sm:block" />
+                    {settings?.about_title || "About Me"}
+                </h2>
+                <div className="text-gray-400 space-y-6 leading-relaxed text-base md:text-xl">
+                    {settings?.about_description && typeof settings.about_description === 'string' ? (
+                        parse(settings.about_description.replace(/\n/g, '<br>'))
+                    ) : (
+                        <p>I am a passionate Full Stack & Backend Developer focused on building high-performance web applications.</p>
+                    )}
+                </div>
+
+                <div className="grid grid-cols-2 gap-4 md:gap-8 mt-12">
+                    {[
+                        { label: '3+ Years', sub: 'Experience' },
+                        { label: `${safeProjects?.length || 0}+ Projects`, sub: 'Completed' },
+                        { label: 'Backend', sub: 'Specialist' },
+                        { label: 'Laravel', sub: 'Expert' }
+                    ].map((stat, i) => (
+                        <div key={i} className="p-5 md:p-8 rounded-3xl bg-white/5 border border-white/10 hover:border-cyan-500/30 transition-all group">
+                            <div className="text-xl md:text-3xl font-black text-cyan-400 group-hover:scale-105 transition-transform origin-left">{stat.label}</div>
+                            <div className="text-[10px] md:text-xs font-bold text-gray-500 uppercase tracking-widest mt-1">{stat.sub}</div>
+                        </div>
+                    ))}
+                </div>
+            </motion.div>
+        </div>
+    </div>
+</section>
+
+            {/* Skills Section */}
+            <section id="skills" className="py-16 md:py-32 px-4 sm:px-6 relative bg-white/[0.02]">
                 <div className="max-w-7xl mx-auto">
-                    <div className="grid md:grid-cols-2 gap-16 items-center">
-                        <motion.div
-                            initial={{ opacity: 0, x: -50 }}
-                            whileInView={{ opacity: 1, x: 0 }}
-                            viewport={{ once: true }}
-                            className="relative group"
-                        >
-                            <div className="absolute -inset-4 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-3xl blur-2xl opacity-10 group-hover:opacity-20 transition-opacity" />
-                            <div className="relative aspect-[4/5] md:aspect-square rounded-3xl overflow-hidden border border-white/10 shadow-2xl">
-                                <Swiper
-                                    modules={[Autoplay, Pagination, EffectFade]}
-                                    effect="fade"
-                                    autoplay={{ delay: 3000 }}
-                                    pagination={{ clickable: true }}
-                                    className="w-full h-full"
-                                >
-                                    {profileImages.map((img, i) => (
-                                        <SwiperSlide key={i}>
-                                            <img 
-                                                src={getImageUrl(img)} 
-                                                alt={`Profile ${i + 1}`} 
-                                                className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-1000" 
-                                            />
-                                        </SwiperSlide>
-                                    ))}
-                                </Swiper>
-                            </div>
-                        </motion.div>
-                        
-                        <motion.div
-                            initial={{ opacity: 0, x: 20 }}
-                            whileInView={{ opacity: 1, x: 0 }}
-                            viewport={{ once: true }}
-                        >
-                            <h2 className="text-3xl font-bold mb-6 flex items-center gap-4">
-                                <span className="h-px w-12 bg-cyan-500" />
-                                {settings?.about_title || "About Me"}
-                            </h2>
-                            <div className="text-gray-400 space-y-4 leading-relaxed text-lg">
-                                {settings?.about_description ? parse(settings.about_description.replace(/\n/g, '<br>')) : (
-                                    <p>I am a passionate Full Stack & Backend Developer focused on building high-performance, scalable, and user-centric web applications.</p>
-                                )}
-                            </div>
-                            
-                            <div className="grid grid-cols-2 gap-6 mt-10">
-                                {[
-                                    { label: '3+ Years', sub: 'Experience' },
-                                    { label: `${projects?.length || 0}+ Projects`, sub: 'Completed' },
-                                    { label: 'Backend', sub: 'Specialist' },
-                                    { label: 'Laravel', sub: 'Expert' }
-                                ].map((stat, i) => (
-                                    <div key={i} className="p-6 rounded-2xl bg-white/5 border border-white/10 hover:border-cyan-500/30 transition-colors group">
-                                        <div className="text-2xl font-bold text-cyan-400 group-hover:scale-110 transition-transform origin-left">{stat.label}</div>
-                                        <div className="text-sm text-gray-500 uppercase tracking-widest">{stat.sub}</div>
+                    <div className="text-center mb-16 md:mb-24">
+                        <h2 className="text-3xl md:text-5xl font-black mb-6 uppercase tracking-tighter">Technical Skills</h2>
+                        <p className="text-gray-500 text-base md:text-xl max-w-2xl mx-auto px-4">Modern tools and frameworks I use to build high-performance web applications.</p>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-10">
+                        {['Frontend', 'Backend', 'Database', 'Tools'].map((cat) => (
+                            <motion.div
+                                key={cat}
+                                initial={{ opacity: 0, y: 30 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                viewport={{ once: true, margin: "100px" }}
+                                className="p-6 sm:p-10 rounded-[2rem] bg-gradient-to-b from-white/[0.04] to-transparent border border-white/5 hover:border-cyan-500/20 transition-all duration-500 group shadow-2xl"
+                            >
+                                <div className="flex items-center gap-4 mb-10">
+                                    <div className="w-12 h-12 rounded-2xl bg-cyan-500/10 flex items-center justify-center border border-cyan-500/20 group-hover:scale-110 transition-transform duration-500">
+                                        <div className="w-3 h-3 rounded-full bg-cyan-400 shadow-[0_0_15px_rgba(34,211,238,0.6)] animate-pulse" />
                                     </div>
-                                ))}
-                            </div>
-                        </motion.div>
+                                    <h3 className="text-xl sm:text-2xl font-black uppercase tracking-widest text-white">{cat}</h3>
+                                </div>
+                                
+                                <div className="space-y-8">
+                                    {getSkillsByCategory(cat).map((skill, si) => (
+                                        <div key={si} className="flex flex-col gap-3 group/item">
+                                            <div className="flex justify-between items-center">
+                                                <span className="text-gray-300 font-bold tracking-wide text-sm sm:text-base group-hover/item:text-cyan-400 transition-colors">{skill.name}</span>
+                                                <span className="text-cyan-400 text-xs font-black font-mono bg-cyan-500/10 px-2.5 py-1 rounded-lg border border-cyan-500/20">{skill.level}%</span>
+                                            </div>
+                                            <div className="w-full h-2.5 bg-white/5 rounded-full overflow-hidden shadow-inner">
+                                                <motion.div 
+                                                    initial={{ width: 0 }}
+                                                    whileInView={{ width: `${skill.level}%` }}
+                                                    transition={{ duration: 1.2, delay: 0.1, ease: "easeOut" }}
+                                                    viewport={{ once: true, margin: "100px" }}
+                                                    className="h-full bg-gradient-to-r from-cyan-500 to-blue-500 rounded-full shadow-[0_0_10px_rgba(34,211,238,0.5)] relative"
+                                                >
+                                                    <div className="absolute inset-0 bg-white/20 w-full h-full animate-[shimmer_2s_infinite] -skew-x-12 translate-x-[-100%]" />
+                                                </motion.div>
+                                            </div>
+                                        </div>
+                                    ))}
+                                    {getSkillsByCategory(cat).length === 0 && (
+                                        <div className="p-6 rounded-xl border border-dashed border-white/10 text-center">
+                                            <span className="text-xs text-gray-600 italic font-bold uppercase tracking-widest">No tools listed</span>
+                                        </div>
+                                    )}
+                                </div>
+                            </motion.div>
+                        ))}
                     </div>
                 </div>
             </section>
 
             {/* Experience Section */}
-            <section id="experience" className="py-24 px-4 relative">
+            <section id="experience" className="py-16 md:py-32 px-6 relative">
                 <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_center,rgba(34,211,238,0.03)_0,transparent_100%)]" />
                 <div className="max-w-4xl mx-auto">
-                    <div className="text-center mb-16">
-                        <h2 className="text-3xl md:text-4xl font-bold mb-4">Professional Journey</h2>
-                        <p className="text-gray-500">My path as a software developer, from early beginnings to current milestones.</p>
+                    <div className="text-center mb-16 md:mb-24">
+                        <h2 className="text-3xl md:text-5xl font-black mb-6 uppercase tracking-tighter">Professional Journey</h2>
+                        <p className="text-gray-500 text-base md:text-xl">My path as a software developer, from early beginnings to current achievements.</p>
                     </div>
-                    <div className="space-y-16">
-                        {experiences?.map((exp, i) => (
+                    <div className="space-y-12 md:space-y-20 relative">
+                        {/* Vertical Line */}
+                        <div className="absolute left-4 sm:left-1/2 top-0 bottom-0 w-px bg-gradient-to-b from-cyan-500 via-white/10 to-transparent hidden sm:block" />
+                        
+                        {safeExperiences.map((exp, i) => (
                             <motion.div
                                 key={i}
                                 initial={{ opacity: 0, y: 30 }}
                                 whileInView={{ opacity: 1, y: 0 }}
-                                viewport={{ once: true }}
-                                className="relative pl-12 border-l-2 border-white/10 hover:border-cyan-500/50 transition-colors"
+                                viewport={{ once: true, margin: "50px" }}
+                                className={`relative flex flex-col ${i % 2 === 0 ? 'sm:flex-row' : 'sm:flex-row-reverse'} gap-8 md:gap-16`}
                             >
-                                <div className="absolute left-[-9px] top-0 w-4 h-4 rounded-full bg-[#0a0a0a] border-2 border-cyan-500 shadow-[0_0_15px_rgba(34,211,238,0.5)]" />
-                                <div className="mb-2 inline-block px-3 py-1 rounded-full bg-cyan-500/10 text-cyan-400 text-xs font-bold uppercase tracking-widest">
-                                    {getYear(exp.start_date)} — {exp.is_current ? 'Present' : getYear(exp.end_date)}
-                                </div>
-                                <h3 className="text-2xl font-bold text-white mb-1">{exp.role}</h3>
-                                <div className="text-cyan-500/80 font-medium text-lg mb-6">{exp.company}</div>
+                                {/* Circle on line */}
+                                <div className="absolute left-[-2px] sm:left-1/2 sm:-translate-x-1/2 top-0 w-4 h-4 rounded-full bg-[#0a0a0a] border-2 border-cyan-500 shadow-[0_0_15px_rgba(34,211,238,0.5)] z-10" />
                                 
-                                <div className="mb-6">
-                                    {renderDescription(exp.description)}
+                                <div className={`sm:w-1/2 pl-10 sm:pl-0 ${i % 2 === 0 ? 'sm:text-right' : 'sm:text-left'}`}>
+                                    <div className="mb-4 inline-block px-4 py-1.5 rounded-full bg-cyan-500/10 text-cyan-400 text-[10px] font-black uppercase tracking-[0.2em] border border-cyan-500/20">
+                                        {getYear(exp.start_date)} — {exp.is_current ? 'Present' : getYear(exp.end_date)}
+                                    </div>
+                                    <h3 className="text-2xl md:text-3xl font-black text-white mb-2 leading-tight">{exp.role}</h3>
+                                    <div className="text-cyan-500/80 font-bold text-lg mb-6">{exp.company}</div>
                                 </div>
 
-                                {exp.tech_stack && (
-                                    <div className="flex flex-wrap gap-2">
-                                        {exp.tech_stack.map((tech, ti) => (
-                                            <span key={ti} className="px-2 py-1 text-[10px] rounded bg-white/5 border border-white/10 text-gray-400 font-mono italic">
-                                                #{tech}
-                                            </span>
-                                        ))}
+                                <div className="sm:w-1/2 pl-10 sm:pl-0">
+                                    <div className={`p-8 rounded-3xl bg-white/[0.02] border border-white/10 hover:border-cyan-500/20 transition-all ${i % 2 === 0 ? 'sm:text-left' : 'sm:text-left'}`}>
+                                        <div className="mb-8">
+                                            {renderDescription(exp.description)}
+                                        </div>
+
+                                        {exp.tech_stack && (
+                                            <div className={`flex flex-wrap gap-2 ${i % 2 === 0 ? 'sm:justify-start' : 'sm:justify-start'}`}>
+                                                {exp.tech_stack.map((tech, ti) => (
+                                                    <span key={ti} className="px-3 py-1 text-[10px] rounded-lg bg-white/5 border border-white/10 text-gray-400 font-bold uppercase tracking-wider">
+                                                        {tech}
+                                                    </span>
+                                                ))}
+                                            </div>
+                                        )}
                                     </div>
-                                )}
+                                </div>
                             </motion.div>
                         ))}
                     </div>
@@ -300,22 +479,22 @@ const Home = ({ settings, skills, experiences, projects, certificates, education
             </section>
 
             {/* Projects Section */}
-            <section id="projects" className="py-24 px-4 bg-white/[0.02]">
+            <section id="projects" className="py-16 md:py-32 px-6 bg-white/[0.02] relative">
                 <div className="max-w-7xl mx-auto">
-                    <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-8">
+                    <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-16 md:mb-24 gap-10">
                         <div>
-                            <h2 className="text-4xl font-extrabold mb-4">Selected Works</h2>
-                            <p className="text-gray-500 text-lg">Solving complex problems with elegant code</p>
+                            <h2 className="text-4xl md:text-6xl font-black mb-6 uppercase tracking-tighter">Selected Projects</h2>
+                            <p className="text-gray-500 text-lg md:text-xl">Delivering robust solutions through clean and efficient code</p>
                         </div>
-                        <div className="flex flex-wrap gap-2 p-1.5 bg-black/50 rounded-2xl border border-white/10 backdrop-blur-sm">
-                            {['All', ...new Set(projects?.map(p => p.category) || [])].filter(Boolean).map((cat) => (
+                        <div className="flex flex-wrap gap-2 p-2 bg-black/50 rounded-[1.5rem] border border-white/10 backdrop-blur-sm">
+                            {['All', ...new Set(safeProjects.map(p => p.category))].filter(Boolean).map((cat) => (
                                 <button
                                     key={cat}
                                     onClick={() => setSelectedCategory(cat)}
-                                    className={`px-6 py-2.5 rounded-xl text-xs font-bold transition-all ${
+                                    className={`px-6 py-3 rounded-xl text-xs font-black uppercase tracking-widest transition-all ${
                                         selectedCategory === cat 
-                                        ? 'bg-cyan-500 text-black shadow-xl shadow-cyan-500/20' 
-                                        : 'text-gray-400 hover:text-white hover:bg-white/5'
+                                        ? 'bg-cyan-500 text-black shadow-xl shadow-cyan-500/40' 
+                                        : 'text-gray-500 hover:text-white hover:bg-white/5'
                                     }`}
                                 >
                                     {cat}
@@ -324,15 +503,14 @@ const Home = ({ settings, skills, experiences, projects, certificates, education
                         </div>
                     </div>
                     
-                    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-10">
-                        {projects?.filter(p => selectedCategory === 'All' || p.category === selectedCategory).map((proj, i) => (
+                    <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-12">
+                        {safeProjects.filter(p => selectedCategory === 'All' || p.category === selectedCategory).map((proj, i) => (
                             <motion.div
                                 key={i}
-                                layout
-                                initial={{ opacity: 0, scale: 0.9 }}
+                                initial={{ opacity: 0, scale: 0.95 }}
                                 animate={{ opacity: 1, scale: 1 }}
                                 whileHover={{ y: -12 }}
-                                className="group rounded-3xl overflow-hidden bg-[#111] border border-white/5 hover:border-cyan-500/30 transition-all shadow-xl"
+                                className="group rounded-[2.5rem] overflow-hidden bg-[#111] border border-white/5 hover:border-cyan-500/30 transition-all shadow-2xl"
                             >
                                 <div className="aspect-[16/10] bg-gray-900 relative overflow-hidden">
                                     {proj.thumbnail ? (
@@ -342,40 +520,40 @@ const Home = ({ settings, skills, experiences, projects, certificates, education
                                             <Github className="text-white/5 w-24 h-24" />
                                         </div>
                                     )}
-                                    <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-4 backdrop-blur-[2px]">
+                                    <div className="absolute inset-0 bg-black/80 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-6 backdrop-blur-[4px]">
                                         {proj.github_url && (
-                                            <a href={proj.github_url} target="_blank" className="p-4 rounded-full bg-cyan-500 text-black hover:scale-110 active:scale-95 transition-all"><Github size={22} /></a>
+                                            <a href={proj.github_url} target="_blank" className="p-5 rounded-full bg-cyan-500 text-black hover:scale-110 active:scale-95 transition-all shadow-xl shadow-cyan-500/40"><Github size={24} /></a>
                                         )}
                                         {proj.demo_url && (
-                                            <a href={proj.demo_url} target="_blank" className="p-4 rounded-full bg-white text-black hover:scale-110 active:scale-95 transition-all"><ExternalLink size={22} /></a>
+                                            <a href={proj.demo_url} target="_blank" className="p-5 rounded-full bg-white text-black hover:scale-110 active:scale-95 transition-all shadow-xl shadow-white/20"><ExternalLink size={24} /></a>
                                         )}
                                     </div>
                                 </div>
-                                <div className="p-8">
-                                    <div className="flex gap-2 mb-4">
-                                        <span className="text-[10px] px-2.5 py-1 rounded-full bg-cyan-500/10 text-cyan-400 font-black uppercase tracking-widest border border-cyan-500/20">{proj.category || 'Web App'}</span>
+                                <div className="p-10">
+                                    <div className="flex gap-2 mb-6">
+                                        <span className="text-[10px] px-3 py-1 rounded-full bg-cyan-500/10 text-cyan-400 font-black uppercase tracking-widest border border-cyan-500/20">{proj.category || 'Web App'}</span>
                                     </div>
-                                    <h3 className="text-xl font-bold mb-3 group-hover:text-cyan-400 transition-colors">{proj.title}</h3>
-                                    <p className="text-gray-500 text-sm mb-6 line-clamp-2 leading-relaxed">
+                                    <h3 className="text-2xl font-black mb-4 group-hover:text-cyan-400 transition-colors leading-tight tracking-tight">{proj.title}</h3>
+                                    <p className="text-gray-500 text-base mb-8 line-clamp-2 leading-relaxed">
                                         {proj.description}
                                     </p>
                                     
-                                    <div className="flex flex-wrap gap-1.5 mb-8">
+                                    <div className="flex flex-wrap gap-2 mb-10">
                                         {proj.tech_stack?.slice(0, 4).map((tech, ti) => (
-                                            <span key={ti} className="text-[10px] text-gray-500 font-medium px-2 py-0.5 rounded border border-white/5 bg-white/[0.02]">
+                                            <span key={ti} className="text-[10px] text-gray-400 font-bold uppercase tracking-wider px-3 py-1 rounded-lg border border-white/5 bg-white/[0.03]">
                                                 {tech}
                                             </span>
                                         ))}
                                         {proj.tech_stack?.length > 4 && (
-                                            <span className="text-[10px] text-gray-600 font-medium px-2 py-0.5">+{proj.tech_stack.length - 4}</span>
+                                            <span className="text-[10px] text-gray-600 font-bold px-2 py-1">+{proj.tech_stack.length - 4}</span>
                                         )}
                                     </div>
 
                                     <button 
                                         onClick={() => setSelectedProject(proj)}
-                                        className="w-full py-3 rounded-xl border border-white/10 text-sm font-bold flex items-center justify-center gap-2 group-hover:bg-cyan-500 group-hover:text-black group-hover:border-transparent transition-all active:scale-[0.98]"
+                                        className="w-full py-4 rounded-2xl border border-white/10 text-xs font-black uppercase tracking-widest flex items-center justify-center gap-3 group-hover:bg-cyan-500 group-hover:text-black group-hover:border-transparent transition-all active:scale-[0.98] shadow-lg"
                                     >
-                                        Details View <ExternalLink size={14} />
+                                        Case Study <ExternalLink size={16} />
                                     </button>
                                 </div>
                             </motion.div>
@@ -385,12 +563,12 @@ const Home = ({ settings, skills, experiences, projects, certificates, education
             </section>
 
             {/* Contact Section */}
-            <section id="contact" className="py-24 px-4 relative overflow-hidden">
-                <div className="absolute top-1/2 left-0 -translate-y-1/2 w-[600px] h-[600px] bg-purple-500/5 blur-[120px] rounded-full -z-10" />
+            <section id="contact" className="py-16 md:py-32 px-4 relative overflow-hidden">
+                <div className="absolute top-1/2 left-0 -translate-y-1/2 w-[300px] md:w-[600px] h-[300px] md:h-[600px] bg-purple-500/5 blur-[80px] md:blur-[120px] rounded-full -z-10" />
                 <div className="max-w-7xl mx-auto">
                     <div className="grid lg:grid-cols-2 gap-20">
                         <div>
-                            <h2 className="text-4xl font-extrabold mb-6 leading-tight">Got a project?<br />Let's talk about it.</h2>
+                            <h2 className="text-4xl font-extrabold mb-6 leading-tight">Have a project?<br />Let's work together.</h2>
                             <p className="text-gray-400 text-lg mb-12 max-w-md">
                                 {settings?.contact_description || "Have a project in mind or want to hire me for your team? Feel free to reach out. I'm always open to new opportunities."}
                             </p>
@@ -405,7 +583,7 @@ const Home = ({ settings, skills, experiences, projects, certificates, education
                                         <div className="text-xl font-medium text-white">{settings?.contact_email || "dinar.abd@example.com"}</div>
                                     </div>
                                 </div>
-                                {social_links?.find(s => s.platform.toLowerCase() === 'linkedin') && (
+                                {safeSocialLinks.find(s => (s.platform || '').toLowerCase() === 'linkedin') && (
                                     <div className="flex items-center gap-6 group">
                                         <div className="w-14 h-14 rounded-2xl bg-blue-500/10 flex items-center justify-center text-blue-400 group-hover:bg-blue-500 group-hover:text-white transition-all">
                                             <Linkedin size={24} />
@@ -617,10 +795,10 @@ const Home = ({ settings, skills, experiences, projects, certificates, education
                         
                         <div className="flex flex-col items-center gap-6">
                             <div className="flex gap-8 text-gray-500">
-                                {social_links?.map((social, i) => (
+                                {safeSocialLinks.map((social, i) => (
                                     <a key={i} href={social.url} target="_blank" className="hover:text-cyan-400 transition-all hover:scale-110">
-                                        {social.platform.toLowerCase().includes('github') ? <Github size={24} /> : 
-                                         social.platform.toLowerCase().includes('linkedin') ? <Linkedin size={24} /> :
+                                        {(social.platform || '').toLowerCase().includes('github') ? <Github size={24} /> : 
+                                         (social.platform || '').toLowerCase().includes('linkedin') ? <Linkedin size={24} /> :
                                          <Mail size={24} />}
                                     </a>
                                 ))}

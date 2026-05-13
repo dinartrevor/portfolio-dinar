@@ -17,7 +17,14 @@ Route::get('/seeder', function () {
 
 Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', function () {
-        return Inertia::render('Dashboard');
+        return Inertia::render('Dashboard', [
+            'stats' => [
+                'projects' => \App\Models\Project::count(),
+                'experiences' => \App\Models\Experience::count(),
+                'skills' => \App\Models\Skill::count(),
+                'certificates' => \App\Models\Certificate::count(),
+            ]
+        ]);
     })->name('dashboard');
 
     Route::resource('projects', \App\Http\Controllers\Admin\ProjectController::class);

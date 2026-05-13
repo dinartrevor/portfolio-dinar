@@ -5,6 +5,20 @@ import ResponsiveNavLink from '@/Components/ResponsiveNavLink';
 import { Link, usePage } from '@inertiajs/react';
 import { useState, useEffect } from 'react';
 import Toast from '@/Components/Toast';
+import { 
+    LayoutDashboard, 
+    Layers, 
+    Briefcase, 
+    Zap, 
+    Award, 
+    GraduationCap, 
+    Share2, 
+    Settings as SettingsIcon, 
+    Mail, 
+    ChevronDown,
+    Menu,
+    X as CloseIcon
+} from 'lucide-react';
 
 export default function AuthenticatedLayout({ header, children }) {
     const user = usePage().props.auth.user;
@@ -23,8 +37,20 @@ export default function AuthenticatedLayout({ header, children }) {
         }
     }, [flash]);
 
+    const navItems = [
+        { name: 'Dashboard', href: route('admin.dashboard'), active: route().current('admin.dashboard'), icon: <LayoutDashboard className="w-4 h-4" /> },
+        { name: 'Projects', href: route('admin.projects.index'), active: route().current('admin.projects.*'), icon: <Layers className="w-4 h-4" /> },
+        { name: 'Experience', href: route('admin.experiences.index'), active: route().current('admin.experiences.*'), icon: <Briefcase className="w-4 h-4" /> },
+        { name: 'Skills', href: route('admin.skills.index'), active: route().current('admin.skills.*'), icon: <Zap className="w-4 h-4" /> },
+        { name: 'Certificates', href: route('admin.certificates.index'), active: route().current('admin.certificates.*'), icon: <Award className="w-4 h-4" /> },
+        { name: 'Education', href: route('admin.educations.index'), active: route().current('admin.educations.*'), icon: <GraduationCap className="w-4 h-4" /> },
+        { name: 'Social', href: route('admin.social-links.index'), active: route().current('admin.social-links.*'), icon: <Share2 className="w-4 h-4" /> },
+        { name: 'Settings', href: route('admin.settings.index'), active: route().current('admin.settings.*'), icon: <SettingsIcon className="w-4 h-4" /> },
+        { name: 'Messages', href: route('admin.messages.index'), active: route().current('admin.messages.*'), icon: <Mail className="w-4 h-4" /> },
+    ];
+
     return (
-        <div className="min-h-screen bg-gray-100 dark:bg-gray-900">
+        <div className="min-h-screen bg-[#F8FAFC] dark:bg-gray-950 transition-colors duration-500">
             {toast && (
                 <Toast 
                     message={toast.message} 
@@ -32,71 +58,31 @@ export default function AuthenticatedLayout({ header, children }) {
                     onClose={() => setToast(null)} 
                 />
             )}
-            <nav className="border-b border-gray-100 bg-white dark:border-gray-700 dark:bg-gray-800">
+            <nav className="sticky top-0 z-50 border-b border-gray-200 bg-white/80 backdrop-blur-xl dark:border-gray-800 dark:bg-gray-900/80 transition-all">
                 <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                     <div className="flex h-16 justify-between">
                         <div className="flex">
                             <div className="flex shrink-0 items-center">
-                                <Link href="/">
-                                    <ApplicationLogo className="block h-9 w-auto fill-current text-gray-800 dark:text-gray-200" />
+                                <Link href="/" className="group flex items-center gap-2">
+                                    <div className="w-10 h-10 bg-cyan-600 rounded-xl flex items-center justify-center text-white shadow-lg shadow-cyan-500/30 group-hover:rotate-6 transition-transform">
+                                        <ApplicationLogo className="w-6 h-6 fill-current" />
+                                    </div>
+                                    <span className="hidden md:block font-black tracking-tighter text-xl text-gray-900 dark:text-white uppercase italic">Portfolio<span className="text-cyan-600">Admin</span></span>
                                 </Link>
                             </div>
 
-                            <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                                <NavLink
-                                    href={route('admin.dashboard')}
-                                    active={route().current('admin.dashboard')}
-                                >
-                                    Dashboard
-                                </NavLink>
-                                <NavLink
-                                    href={route('admin.projects.index')}
-                                    active={route().current('admin.projects.*')}
-                                >
-                                    Projects
-                                </NavLink>
-                                <NavLink
-                                    href={route('admin.experiences.index')}
-                                    active={route().current('admin.experiences.*')}
-                                >
-                                    Experience
-                                </NavLink>
-                                <NavLink
-                                    href={route('admin.skills.index')}
-                                    active={route().current('admin.skills.*')}
-                                >
-                                    Skills
-                                </NavLink>
-                                <NavLink
-                                    href={route('admin.certificates.index')}
-                                    active={route().current('admin.certificates.*')}
-                                >
-                                    Certificates
-                                </NavLink>
-                                <NavLink
-                                    href={route('admin.educations.index')}
-                                    active={route().current('admin.educations.*')}
-                                >
-                                    Education
-                                </NavLink>
-                                <NavLink
-                                    href={route('admin.social-links.index')}
-                                    active={route().current('admin.social-links.*')}
-                                >
-                                    Social Links
-                                </NavLink>
-                                <NavLink
-                                    href={route('admin.settings.index')}
-                                    active={route().current('admin.settings.*')}
-                                >
-                                    Settings
-                                </NavLink>
-                                <NavLink
-                                    href={route('admin.messages.index')}
-                                    active={route().current('admin.messages.*')}
-                                >
-                                    Messages
-                                </NavLink>
+                            <div className="hidden space-x-1 sm:-my-px sm:ms-10 lg:flex items-center">
+                                {navItems.map((item) => (
+                                    <NavLink
+                                        key={item.name}
+                                        href={item.href}
+                                        active={item.active}
+                                        className="flex items-center gap-2 px-3 py-2 text-sm font-bold transition-all rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800"
+                                    >
+                                        <span className={`${item.active ? 'text-cyan-600' : 'text-gray-400'}`}>{item.icon}</span>
+                                        {item.name}
+                                    </NavLink>
+                                ))}
                             </div>
                         </div>
 
@@ -154,35 +140,11 @@ export default function AuthenticatedLayout({ header, children }) {
                                 }
                                 className="inline-flex items-center justify-center rounded-md p-2 text-gray-400 transition duration-150 ease-in-out hover:bg-gray-100 hover:text-gray-500 focus:bg-gray-100 focus:text-gray-500 focus:outline-none dark:text-gray-500 dark:hover:bg-gray-900 dark:hover:text-gray-400 dark:focus:bg-gray-900 dark:focus:text-gray-400"
                             >
-                                <svg
-                                    className="h-6 w-6"
-                                    stroke="currentColor"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                >
-                                    <path
-                                        className={
-                                            !showingNavigationDropdown
-                                                ? 'inline-flex'
-                                                : 'hidden'
-                                        }
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        strokeWidth="2"
-                                        d="M4 6h16M4 12h16M4 18h16"
-                                    />
-                                    <path
-                                        className={
-                                            showingNavigationDropdown
-                                                ? 'inline-flex'
-                                                : 'hidden'
-                                        }
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        strokeWidth="2"
-                                        d="M6 18L18 6M6 6l12 12"
-                                    />
-                                </svg>
+                                {showingNavigationDropdown ? (
+                                    <CloseIcon className="h-6 w-6" />
+                                ) : (
+                                    <Menu className="h-6 w-6" />
+                                )}
                             </button>
                         </div>
                     </div>

@@ -6,7 +6,13 @@ export default function Show({ project }) {
     const getImageUrl = (path) => {
         if (!path) return null;
         if (path.startsWith('http')) return path;
-        return `/storage/${path}`;
+        
+        let cleanPath = path.replace(/^\/+/, '');
+        if (cleanPath.startsWith('storage/')) {
+            cleanPath = cleanPath.substring(8);
+        }
+        
+        return `/storage/${cleanPath}`;
     };
 
     return (
